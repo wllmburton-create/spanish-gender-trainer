@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spanish Noun Gender - SI Trainer</title>
+  <style>
+    :root {
+      --bg-primary: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --success: #10b981;
+      --error: #ef4444;
+      --border: #e2e8f0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-primary); color: var(--text-main); display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; }
+    
+    .container { width: 100%; max-width: 700px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 30px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05); margin-top: 20px; }
+    
+    .header { margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+    .title { font-size: 1.5rem; font-weight: 700; color: #0f172a; margin-bottom: 5px; }
+    .meta-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; font-size: 0.85rem; color: #64748b; }
+    .meta-box { background: #f1f5f9; padding: 8px 12px; border-radius: 6px; text-align: center; font-weight: 500; }
+    .streak-count { color: var(--accent); font-weight: 700; }
+    
+    .stage-description { background: #eff6ff; border-left: 4px solid var(--accent); padding: 12px; border-radius: 4px; font-size: 0.9rem; color: #1e40af; margin-bottom: 25px; line-height: 1.4; }
+    
+    .prompt-container { text-align: center; margin: 30px 0; min-height: 80px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+    .prompt-line { font-size: 3rem; font-weight: 800; color: var(--text-main); display: flex; gap: 15px; align-items: center; justify-content: center; flex-wrap: wrap; }
+    .prompt-article { text-transform: lowercase; }
+    .prompt-noun { color: #64748b; font-weight: 600; }
+    .prompt-blank { color: #cbd5e1; font-weight: 500; letter-spacing: 2px; }
+    
+    .sentence-frame { font-size: 1.8rem; font-weight: 600; color: var(--text-main); text-align: center; line-height: 1.5; }
+    .sentence-blank { color: var(--accent); border-bottom: 3px solid var(--accent); padding: 0 15px; font-weight: 800; }
+    .sentence-noun { color: #475569; font-weight: 700; }
+
+    .image-grid { display: grid; gap: 20px; width: 100%; margin-top: 20px; }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-6 { grid-template-columns: repeat(3, 1fr); }
+    @media (max-width: 480px) { .grid-6 { grid-template-columns: repeat(2, 1fr); } }
+
+    .image-card { border: 2px solid var(--border); border-radius: 8px; overflow: hidden; cursor: pointer; transition: all 0.2s ease; background: #fff; position: relative; display: flex; flex-direction: column; aspect-ratio: 4/3; }
+    .image-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 12px rgb(0 0 0 / 0.05); }
+    .image-card img { width: 100%; height: 100%; object-fit: cover; background-color: #f1f5f9; }
+    
+    .presentation-container { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; }
+    .presentation-img { width: 100%; max-width: 400px; aspect-ratio: 4/3; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); }
+    
+    .production-btn-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; width: 100%; margin-top: 25px; }
+    .prod-btn { padding: 18px; font-size: 1.5rem; font-weight: 800; text-transform: lowercase; border-radius: 8px; border: 2px solid var(--border); background: #fff; cursor: pointer; transition: all 0.15s ease; color: var(--text-main); }
+    .prod-btn:hover { border-color: var(--accent); background: #f0f7ff; color: var(--accent); transform: translateY(-1px); }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; padding: 12px 24px; font-size: 1rem; font-weight: 600; border-radius: 6px; border: none; cursor: pointer; transition: background 0.1s ease; width: 100%; background: var(--accent); color: white; margin-top: 15px; }
+    .btn:hover { background: var(--accent-hover); }
+    .btn:disabled { background: #cbd5e1; color: #94a3b8; cursor: not-allowed; }
+    
+    .feedback { text-align: center; padding: 15px; border-radius: 6px; font-weight: 600; font-size: 1.1rem; margin-top: 20px; display: none; }
+    .feedback.correct { background: #d1fae5; color: #065f46; display: block; }
+    .feedback.incorrect { background: #fee2e2; color: #991b1b; display: block; }
+    
+    .scorecard { text-align: center; padding: 20px 10px; }
+    .scorecard-title { font-size: 2.2rem; color: var(--success); font-weight: 800; margin-bottom: 10px; }
+    .scorecard-metric { font-size: 4rem; font-weight: 800; color: var(--text-main); margin: 20px 0; }
+    .scorecard-feedback { font-size: 1.1rem; color: #475569; margin-bottom: 30px; line-height: 1.5; }
+
+    .reset-btn { background: none; border: none; color: #94a3b8; font-size: 0.75rem; text-decoration: underline; cursor: pointer; margin-top: 25px; }
+    .reset-btn:hover { color: var(--error); }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">
+      <div class="title">Spanish Noun Gender Trainer</div>
+      <div class="meta-grid">
+        <div class="meta-box">Batch: <span id="info-batch">1</span></div>
+        <div class="meta-box">Stage: <span id="info-stage">1 / 5</span></div>
+        <div class="meta-box">Current Streak: <span id="info-streak" class="streak-count">0</span></div>
+      </div>
+    </div>
+
+    <div id="stage-desc" class="stage-description"></div>
+    <div id="workspace"></div>
+    <div id="feedback-banner" class="feedback"></div>
+    <center><button class="reset-btn" onclick="resetAllProgress()">Reset All Saved Progress</button></center>
+  </div>
+
+  <script>
+    const vocabularyData = [
+      { id: 1, batch: 1, word: "abogada", article: "la", gender: "fem", imageUrl: "images/abogada.jpeg" },
+      { id: 2, batch: 1, word: "mujer", article: "la", gender: "fem", imageUrl: "images/mujer.jpeg" },
+      { id: 3, batch: 1, word: "hacienda", article: "la", gender: "fem", imageUrl: "images/hacienda.jpeg" },
+      { id: 4, batch: 1, word: "carta", article: "la", gender: "fem", imageUrl: "images/carta.jpg" },
+      { id: 5, batch: 1, word: "historia", article: "la", gender: "fem", imageUrl: "images/historia.jpeg" },
+      { id: 6, batch: 1, word: "hombre", article: "el", gender: "masc", imageUrl: "images/hombre.jpeg" },
+      { id: 7, batch: 1, word: "doctor", article: "el", gender: "masc", imageUrl: "images/doctor.jpeg" },
+      { id: 8, batch: 1, word: "patriarca", article: "el", gender: "masc", imageUrl: "images/patriarca.jpg" },
+      { id: 9, batch: 1, word: "secreto", article: "el", gender: "masc", imageUrl: "images/secreto.webp" },
+      { id: 10, batch: 1, word: "matrimonio", article: "el", gender: "masc", imageUrl: "images/matrimonio.jpeg" },
+      { id: 11, batch: 1, word: "padre", article: "el", gender: "masc", imageUrl: "images/padre.png" },
+      { id: 12, batch: 1, word: "director", article: "el", gender: "masc", imageUrl: "images/director.png" },
+      { id: 13, batch: 1, word: "estudiante", article: "el", gender: "masc", imageUrl: "images/estudiante.png" },
+      { id: 14, batch: 1, word: "profesor", article: "el", gender: "masc", imageUrl: "images/profesor.png" },
+      { id: 15, batch: 1, word: "nombre", article: "el", gender: "masc", imageUrl: "images/nombre.png" },
+      { id: 16, batch: 1, word: "madre", article: "la", gender: "fem", imageUrl: "images/madre.png" },
+      { id: 17, batch: 1, word: "compañía", article: "la", gender: "fem", imageUrl: "images/compania.png" },
+      { id: 18, batch: 1, word: "casa", article: "la", gender: "fem", imageUrl: "images/casa.png" },
+      { id: 19, batch: 1, word: "asignatura", article: "la", gender: "fem", imageUrl: "images/asignatura.png" },
+      { id: 20, batch: 1, word: "biología", article: "la", gender: "fem", imageUrl: "images/biologia.png" }
+    ];
+
+    const sentenceContexts = {
+      "abogada": "____ abogada defiende el caso hoy.",
+      "mujer": "____ mujer lee un libro interesante.",
+      "hacienda": "____ hacienda familiar es muy antigua.",
+      "carta": "____ carta llegó en el correo de la tarde.",
+      "historia": "____ historia del imperio es fascinante.",
+      "hombre": "____ hombre trabaja duro en la oficina.",
+      "doctor": "____ doctor atiende al paciente rápidamente.",
+      "patriarca": "____ patriarca tomó la decisión final.",
+      "secreto": "____ secreto fue revealed al final.",
+      "matrimonio": "____ matrimonio celebra su aniversario.",
+      "padre": "____ padre habla con su hijo felizmente.",
+      "director": "____ director organiza la reunión general.",
+      "estudiante": "____ estudiante repasa la lección con atención.",
+      "profesor": "____ profesor explica la teoría en la pizarra.",
+      "nombre": "____ nombre de la calle está claro aquí.",
+      "madre": "____ madre prepara la comida con cariño.",
+      "compañía": "____ compañía tecnológica abre una sede nueva.",
+      "casa": "____ casa moderna tiene ventanas grandes.",
+      "asignatura": "____ asignatura más difícil es cálculo.",
+      "biología": "____ biología estudia el mundo natural."
+    };
+
+    const state = {
+      currentBatch: 1,
+      currentStage: 1,
+      streak: 0,
+      activeTarget: null,
+      acceptInput: true,
+      
+      wordQueue: [],
+      recentVisualsHistory: [],
+      troubleWords: {}, 
+      masteredIds: [],
+      
+      stageStreakTargets: { 1: 20, 2: 10, 3: 10, 4: 12, 5: 5 },
+      stageDescriptions: {
+        1: "<strong>Stage 1: Presentation </strong><br>Read the words with their articles.",
+        2: "<strong>Stage 2: Identification</strong><br>Choose the correct picture. (Goal: Identify every word and build a streak)",
+        3: "<strong>Stage 3: Articles Only</strong><br>The noun is gone! Rely <em>entirely</em> on the grammatical article to determine the upcoming noun choice.",
+        4: "<strong>Stage 4: Challenge</strong><br>The noun remains hidden. Choose the correct picture out of the extended matrix.",
+        5: "<strong>Stage 5: Production Assessment</strong><br>Syntactic Context Test! Select the correct functional article to complete the sentence agreement loop."
+      },
+      
+      stage5CorrectCount: 0
+    };
+
+    // --- LOCAL STORAGE ENGINES ---
+    function saveProgress() {
+      const saveData = {
+        currentBatch: state.currentBatch,
+        currentStage: state.currentStage,
+        streak: state.streak,
+        troubleWords: state.troubleWords,
+        masteredIds: state.masteredIds
+      };
+      localStorage.setItem('spanishTrainerSave', JSON.stringify(saveData));
+    }
+
+    function loadProgress() {
+      const raw = localStorage.getItem('spanishTrainerSave');
+      if (raw) {
+        try {
+          const parsed = JSON.parse(raw);
+          state.currentBatch = parsed.currentBatch || 1;
+          state.currentStage = parsed.currentStage || 1;
+          state.streak = parsed.streak || 0;
+          state.troubleWords = parsed.troubleWords || {};
+          state.masteredIds = parsed.masteredIds || [];
+          
+          const batchExists = vocabularyData.some(i => i.batch === state.currentBatch);
+          if (!batchExists) state.currentBatch = 1;
+        } catch(e) {
+          console.error("Save state corrupted, initializing fresh baseline.");
+        }
+      }
+    }
+
+    function resetAllProgress() {
+      if (confirm("Are you sure you want to wipe all session history, trouble word tracking, and start fresh?")) {
+        localStorage.removeItem('spanishTrainerSave');
+        state.currentBatch = 1;
+        state.currentStage = 1;
+        state.streak = 0;
+        state.wordQueue = [];
+        state.recentVisualsHistory = [];
+        state.troubleWords = {};
+        state.masteredIds = [];
+        state.stage5CorrectCount = 0;
+        renderWorkspace();
+      }
+    }
+
+    // --- CORE LOGIC PIPELINES ---
+    function shuffle(arr) {
+      let newArr = [...arr];
+      for (let i = newArr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+      }
+      return newArr;
+    }
+
+    function buildSessionQueue() {
+      const currentBatchItems = vocabularyData.filter(i => i.batch === state.currentBatch);
+      
+      if (state.currentStage === 5) {
+        const nonObviousWords = ["patriarca", "estudiante", "doctor", "mujer", "nombre", "asignatura", "biología", "compañía", "hombre", "profesor", "matrimonio"];
+        let highPriority = currentBatchItems.filter(i => nonObviousWords.includes(i.word));
+        let lowPriority = currentBatchItems.filter(i => !nonObviousWords.includes(i.word));
+        let targetedPool = [...shuffle(highPriority), ...shuffle(lowPriority)].slice(0, 5);
+        return shuffle(targetedPool);
+      }
+
+      let unmasteredItems = currentBatchItems.filter(i => !state.masteredIds.includes(i.id));
+      let masteredItems = currentBatchItems.filter(i => state.masteredIds.includes(i.id));
+      
+      let pool = [];
+      if (unmasteredItems.length > 0) {
+        pool.push(...shuffle(unmasteredItems));
+        pool.push(...shuffle(masteredItems).slice(0, 5));
+      } else {
+        pool.push(...shuffle(currentBatchItems));
+      }
+      return pool;
+    }
+
+    function getNextTarget() {
+      if (state.wordQueue.length === 0) {
+        state.wordQueue = buildSessionQueue();
+      }
+      return state.wordQueue.pop();
+    }
+
+    function buildOptions(target, count) {
+      const safeEcosystem = vocabularyData.filter(i => i.batch <= Math.max(target.batch, state.currentBatch));
+      const sameGenderPool = safeEcosystem.filter(i => i.gender === target.gender && i.id !== target.id);
+      const diffGenderPool = safeEcosystem.filter(i => i.gender !== target.gender);
+      
+      let options = [target];
+
+      if (state.currentStage === 4) {
+        const distractors = shuffle(diffGenderPool).slice(0, 5);
+        options.push(...distractors);
+      } else {
+        const baselinePool = (state.currentStage === 3) ? diffGenderPool : [...sameGenderPool, ...diffGenderPool];
+        const freshPool = baselinePool.filter(i => !state.recentVisualsHistory.includes(i.id));
+        const finalSelectionPool = freshPool.length > 0 ? freshPool : baselinePool;
+        
+        options.push(shuffle(finalSelectionPool)[0]);
+      }
+      return shuffle(options);
+    }
+
+    function checkStageCompletion() {
+      const currentBatchItems = vocabularyData.filter(i => i.batch === state.currentBatch);
+      if (state.currentStage === 1 || state.currentStage === 5) {
+        return state.streak >= state.stageStreakTargets[state.currentStage];
+      }
+      const allWordsMastered = currentBatchItems.every(item => state.masteredIds.includes(item.id));
+      const streakMet = state.streak >= state.stageStreakTargets[state.currentStage];
+      return allWordsMastered && streakMet;
+    }
+
+    function handleChoiceSelection(selectedId) {
+      if (!state.acceptInput) return;
+      state.acceptInput = false;
+
+      const isCorrect = (selectedId === state.activeTarget.id);
+      const banner = document.getElementById('feedback-banner');
+      const targetId = state.activeTarget.id;
+      
+      state.recentVisualsHistory = [targetId, selectedId, ...state.recentVisualsHistory].slice(0, 4);
+
+      if (isCorrect) {
+        state.streak++;
+        if (state.currentStage === 5) state.stage5CorrectCount++;
+        
+        if (!state.masteredIds.includes(targetId)) {
+          state.masteredIds.push(targetId);
+        }
+        
+        if (state.troubleWords[targetId] && state.troubleWords[targetId] > 0) {
+          state.troubleWords[targetId]--;
+        }
+        banner.innerHTML = `<strong>¡Correcto!</strong><br>The answer is: <strong>${state.activeTarget.article} ${state.activeTarget.word}</strong>`;
+        banner.className = "feedback correct";
+      } else {
+        if (state.currentStage !== 5) {
+          state.streak = (state.currentStage === 4) ? Math.max(0, state.streak - 1) : 0;
+        } else {
+          state.streak++; 
+        }
+        
+        if (!state.troubleWords[targetId]) state.troubleWords[targetId] = 0;
+        state.troubleWords[targetId] += 2; 
+        
+        banner.innerHTML = `<strong>Incorrecto.</strong><br>You were looking for: <strong>${state.activeTarget.article} ${state.activeTarget.word}</strong>`;
+        banner.className = "feedback incorrect";
+      }
+      
+      document.getElementById('info-streak').innerText = state.streak;
+      banner.style.display = 'block';
+      saveProgress();
+
+      setTimeout(() => {
+        state.acceptInput = true;
+        if (checkStageCompletion()) {
+          advanceProgression();
+        } else {
+          renderWorkspace();
+        }
+      }, 2000);
+    }
+
+    function handleArticleChoice(selectedArticle) {
+      if (!state.acceptInput) return;
+      if (selectedArticle === state.activeTarget.article) {
+        handleChoiceSelection(state.activeTarget.id);
+      } else {
+        handleChoiceSelection(-1);
+      }
+    }
+
+    function advanceProgression() {
+      state.streak = 0;
+      state.masteredIds = []; 
+      const highestBatchNum = Math.max(...vocabularyData.map(i => i.batch));
+
+      if (state.currentStage === 5) {
+        renderScorecardPanel();
+        return;
+      }
+
+      if (state.currentStage < 5) {
+        state.currentStage++;
+      } else {
+        if (state.currentBatch < highestBatchNum) {
+          state.currentBatch++;
+          state.currentStage = 1;
+          alert(`Incredible job! Moving up to Batch ${state.currentBatch}!`);
+        } else {
+          state.currentStage = 1;
+        }
+      }
+      state.wordQueue = [];
+      state.recentVisualsHistory = [];
+      saveProgress();
+      renderWorkspace();
+    }
+
+    function renderScorecardPanel() {
+      const container = document.getElementById('workspace');
+      document.getElementById('stage-desc').style.display = 'none';
+      document.getElementById('feedback-banner').style.display = 'none';
+      
+      const highestBatchNum = Math.max(...vocabularyData.map(i => i.batch));
+      const pct = Math.round((state.stage5CorrectCount / 5) * 100);
+      
+      let customizedQuote = "Keep practicing! Reviewing the presentation items will lock down those trickier endings.";
+      if (pct === 100) customizedQuote = "Flawless mastery!";
+      else if (pct >= 80) customizedQuote = "Fantastic performance!";
+
+      let actionButtonHtml = "";
+      
+      // Lookahead content logic checker
+      if (state.currentBatch < highestBatchNum) {
+        actionButtonHtml = `<button class="btn" id="next-batch-btn" style="padding:15px; font-size:1.1rem;">Unlock Batch ${state.currentBatch + 1}</button>`;
+      } else {
+        actionButtonHtml = `<button class="btn" id="next-batch-btn" style="padding:15px; font-size:1.1rem;" disabled>Batch ${state.currentBatch} Mastered! Waiting for next update...</button>`;
+      }
+
+      container.innerHTML = `
+        <div class="scorecard">
+          <div class="scorecard-title">¡Batch Completo!</div>
+          <div class="scorecard-feedback">Finished! Here is your production score.</div>
+          <div class="scorecard-metric">${state.stage5CorrectCount} / 5</div>
+          <div class="scorecard-feedback" style="font-weight: 500; color: #1e293b;">Accuracy Level: ${pct}%<br><span style="font-size:0.95rem; color:#64748b; font-weight: normal; display:inline-block; margin-top:10px;">${customizedQuote}</span></div>
+          ${actionButtonHtml}
+        </div>
+      `;
+
+      const actionBtn = document.getElementById('next-batch-btn');
+      if (actionBtn && !actionBtn.disabled) {
+        actionBtn.addEventListener('click', () => {
+          state.currentBatch++;
+          state.currentStage = 1;
+          state.streak = 0;
+          state.stage5CorrectCount = 0;
+          state.wordQueue = [];
+          state.recentVisualsHistory = [];
+          document.getElementById('stage-desc').style.display = 'block';
+          saveProgress();
+          renderWorkspace();
+        });
+      }
+    }
+
+    function renderWorkspace() {
+      loadProgress();
+      
+      document.getElementById('info-batch').innerText = state.currentBatch;
+      document.getElementById('info-stage').innerText = state.currentStage + " / 5";
+      document.getElementById('info-streak').innerText = state.streak;
+      document.getElementById('stage-desc').innerHTML = state.stageDescriptions[state.currentStage];
+      document.getElementById('stage-desc').style.display = 'block';
+      document.getElementById('feedback-banner').style.display = 'none';
+      
+      const container = document.getElementById('workspace');
+      container.innerHTML = '';
+
+      if (state.currentStage === 1) {
+        state.activeTarget = getNextTarget();
+        const item = state.activeTarget;
+        const troubleNotice = (state.troubleWords[item.id] > 0) ? `<div style="color:var(--error); font-size:0.8rem; font-weight:700; margin-bottom:5px;">⚠️ TARGETED TROUBLE WORD REVIEW</div>` : '';
+        
+        container.innerHTML = `
+          <div class="presentation-container">
+            <div class="prompt-container">
+              ${troubleNotice}
+              <div class="prompt-line">
+                <span class="prompt-article">${item.article}</span>
+                <span class="prompt-noun">${item.word}</span>
+              </div>
+            </div>
+            <img class="presentation-img" src="${item.imageUrl}" alt="${item.word}">
+            <button class="btn" id="next-presentation-btn">Next Word</button>
+          </div>
+        `;
+        
+        document.getElementById('next-presentation-btn').addEventListener('click', () => {
+          state.streak++;
+          document.getElementById('info-streak').innerText = state.streak;
+          saveProgress();
+          if (checkStageCompletion()) {
+            advanceProgression();
+          } else {
+            renderWorkspace();
+          }
+        });
+        return; 
+      }
+
+      if (state.currentStage === 5) {
+        state.activeTarget = getNextTarget();
+        const item = state.activeTarget;
+        
+        const sentenceTemplate = sentenceContexts[item.word] || "____ Noun context frame.";
+        const parts = sentenceTemplate.split("____");
+        
+        container.innerHTML = `
+          <div class="presentation-container">
+            <img class="presentation-img" src="${item.imageUrl}" alt="Context Graphic" style="max-width:320px; margin-bottom: 10px;">
+            <div class="sentence-frame">
+              ${parts[0]}<span class="sentence-blank">¿?</span><span class="sentence-noun">${parts[1]}</span>
+            </div>
+            
+            <div class="production-btn-container">
+              <button class="prod-btn" onclick="handleArticleChoice('el')">el</button>
+              <button class="prod-btn" onclick="handleArticleChoice('la')">la</button>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      state.activeTarget = getNextTarget();
+      const promptDiv = document.createElement('div');
+      promptDiv.className = 'prompt-container';
+      
+      const troubleNotice = (state.troubleWords[state.activeTarget.id] > 0) ? `<div style="color:var(--error); font-size:0.8rem; font-weight:700; margin-bottom:5px;">⚠️ TARGETED REVIEW</div>` : '';
+      
+      let innerContent = troubleNotice;
+      if (state.currentStage === 2) {
+        innerContent += `
+          <div class="prompt-line">
+            <span class="prompt-article">${state.activeTarget.article}</span>
+            <span class="prompt-noun">${state.activeTarget.word}</span>
+          </div>`;
+      } else {
+        innerContent += `
+          <div class="prompt-line">
+            <span class="prompt-article">${state.activeTarget.article}</span>
+            <span class="prompt-blank">___</span>
+          </div>`;
+      }
+      
+      promptDiv.innerHTML = innerContent;
+      container.appendChild(promptDiv);
+
+      const gridCount = (state.currentStage === 4) ? 6 : 2;
+      const gridDiv = document.createElement('div');
+      gridDiv.className = "image-grid " + (gridCount === 6 ? "grid-6" : "grid-2");
+      
+      const choices = buildOptions(state.activeTarget, gridCount);
+      choices.forEach(opt => {
+        const card = document.createElement('div');
+        card.className = 'image-card';
+        card.innerHTML = `<img src="${opt.imageUrl}" alt="Option" draggable="false">`;
+        card.addEventListener('click', () => handleChoiceSelection(opt.id));
+        gridDiv.appendChild(card);
+      });
+      
+      container.appendChild(gridDiv);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderWorkspace();
+    });
+  </script>
+</body>
+</html>
