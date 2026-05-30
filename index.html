@@ -111,7 +111,27 @@
       { id: 17, batch: 1, word: "compañía", article: "la", gender: "fem", imageUrl: "images/compania.png" },
       { id: 18, batch: 1, word: "casa", article: "la", gender: "fem", imageUrl: "images/casa.png" },
       { id: 19, batch: 1, word: "asignatura", article: "la", gender: "fem", imageUrl: "images/asignatura.png" },
-      { id: 20, batch: 1, word: "biología", article: "la", gender: "fem", imageUrl: "images/biologia.png" }
+      { id: 20, batch: 1, word: "biología", article: "la", gender: "fem", imageUrl: "images/biologia.png" },
+      { id: 21, batch: 2, word: "gato", article: "el", gender: "masc", imageUrl: "images/gato.jpeg" },
+      { id: 22, batch: 2, word: "pez", article: "el", gender: "masc", imageUrl: "images/pez.jpeg" },
+      { id: 23, batch: 2, word: "arte", article: "el", gender: "masc", imageUrl: "images/arte.jpeg" },
+      { id: 24, batch: 2, word: "cálculo", article: "el", gender: "masc", imageUrl: "images/calculo.jpeg" },
+      { id: 25, batch: 2, word: "español", article: "el", gender: "masc", imageUrl: "images/espanol.jpeg" },
+      { id: 26, batch: 2, word: "inglés", article: "el", gender: "masc", imageUrl: "images/ingles.jpeg" },
+      { id: 27, batch: 2, word: "ciego", article: "el", gender: "masc", imageUrl: "images/ciego.jpeg" },
+      { id: 28, batch: 2, word: "maestro", article: "el", gender: "masc", imageUrl: "images/maestro.jpeg" },
+      { id: 29, batch: 2, word: "jersey", article: "el", gender: "masc", imageUrl: "images/jersey.jpeg" },
+      { id: 30, batch: 2, word: "vestido", article: "el", gender: "masc", imageUrl: "images/vestido.jpeg" },
+      { id: 31, batch: 2, word: "maestra", article: "la", gender: "fem", imageUrl: "images/maestra.jpeg" },
+      { id: 32, batch: 2, word: "religión", article: "la", gender: "fem", imageUrl: "images/religion.jpeg" },
+      { id: 33, batch: 2, word: "comunicación", article: "la", gender: "fem", imageUrl: "images/comunicacion.jpeg" },
+      { id: 34, batch: 2, word: "contabilidad", article: "la", gender: "fem", imageUrl: "images/contabilidad.jpeg" },
+      { id: 35, batch: 2, word: "chaqueta", article: "la", gender: "fem", imageUrl: "images/chaqueta.jpeg" },
+      { id: 36, batch: 2, word: "falda", article: "la", gender: "fem", imageUrl: "images/falda.jpeg" },
+      { id: 37, batch: 2, word: "mañana", article: "la", gender: "fem", imageUrl: "images/manana.jpeg" },
+      { id: 38, batch: 2, word: "tarde", article: "la", gender: "fem", imageUrl: "images/tarde.jpeg" },
+      { id: 39, batch: 2, word: "noche", article: "la", gender: "fem", imageUrl: "images/noche.jpeg" },
+      { id: 40, batch: 2, word: "corbata", article: "la", gender: "fem", imageUrl: "images/corbata.jpeg" }
     ];
 
     const sentenceContexts = {
@@ -134,7 +154,27 @@
       "compañía": "____ compañía tecnológica abre una sede nueva.",
       "casa": "____ casa moderna tiene ventanas grandes.",
       "asignatura": "____ asignatura más difícil es cálculo.",
-      "biología": "____ biología estudia el mundo natural."
+      "biología": "____ biología estudia el mundo natural.",
+      "gato": "____ gato duerme en el sof\u00e1 c\u00f3modamente.",
+      "pez": "____ pez nada r\u00e1pido en la pecera.",
+      "arte": "____ arte moderno expresa muchas emociones.",
+      "c\u00e1lculo": "____ c\u00e1lculo es una materia bastante compleja.",
+      "espa\u00f1ol": "____ espa\u00f1ol es un idioma hermoso de aprender.",
+      "ingl\u00e9s": "____ ingl\u00e9s se habla en muchos pa\u00edses.",
+      "ciego": "____ ciego camina seguro con su bast\u00f3n.",
+      "maestro": "____ maestro ense\u00f1a la lecci\u00f3n con paciencia.",
+      "jersey": "____ jersey de lana abriga mucho en invierno.",
+      "vestido": "____ vestido elegante es perfecto para la fiesta.",
+      "maestra": "____ maestra explica el ejercicio con claridad.",
+      "religi\u00f3n": "____ religi\u00f3n influye en la cultura local.",
+      "comunicaci\u00f3n": "____ comunicaci\u00f3n clara evita muchos malentendidos.",
+      "contabilidad": "____ contabilidad registra las finanzas del negocio.",
+      "chaqueta": "____ chaqueta azul protege contra el viento.",
+      "falda": "____ falda larga combina bien con la blusa.",
+      "ma\u00f1ana": "____ ma\u00f1ana est\u00e1 fresca y muy despejada.",
+      "tarde": "____ tarde pasa volando cuando nos divertimos.",
+      "noche": "____ noche estrellada es perfecta para descansar.",
+      "corbata": "____ corbata roja completa el traje formal."
     };
 
     const state = {
@@ -221,7 +261,7 @@
       const currentBatchItems = vocabularyData.filter(i => i.batch === state.currentBatch);
       
       if (state.currentStage === 5) {
-        const nonObviousWords = ["patriarca", "estudiante", "doctor", "mujer", "nombre", "asignatura", "biología", "compañía", "hombre", "profesor", "matrimonio"];
+        const nonObviousWords = ["patriarca", "estudiante", "doctor", "mujer", "nombre", "asignatura", "biología", "compañía", "hombre", "profesor", "matrimonio", "arte", "maestro", "maestra", "religión", "comunicación", "tarde", "noche"];
         let highPriority = currentBatchItems.filter(i => nonObviousWords.includes(i.word));
         let lowPriority = currentBatchItems.filter(i => !nonObviousWords.includes(i.word));
         let targetedPool = [...shuffle(highPriority), ...shuffle(lowPriority)].slice(0, 5);
