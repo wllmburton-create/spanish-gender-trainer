@@ -289,9 +289,29 @@
     }
 
     function buildOptions(target, count) {
+      // 1. HARD LOCK: Only allow words belonging to the exact active batch
       const safeEcosystem = vocabularyData.filter(i => i.batch === state.currentBatch);
+      
+      // 2. Separate them by gender using ONLY that safe batch ecosystem
       const sameGenderPool = safeEcosystem.filter(i => i.gender === target.gender && i.id !== target.id);
       const diffGenderPool = safeEcosystem.filter(i => i.gender !== target.gender);
+      
+      let options = [target];
+
+      if (state.currentStage === 4) {
+        // Stage 4 Matrix: Pull 5 distractors strictly from the opposite gender of the current batch
+        const distractors = shuffle(diffGenderPool).slice(0, 5);
+        options.push(...distractors);
+      } else {
+        // Stages 2 & 3: Standard 2-choice layout using strictly current batch words
+        const baselinePool = (state.currentStage === 3) ? diffGenderPool : [...sameGenderPool, ...diffGenderPool];
+        const freshPool = baselinePool.filter(i => !state.recentVisualsHistory.includes(i.id));
+        const finalSelectionPool = freshPool.length > 0 ? freshPool : baselinePool;
+        
+        options.push(shuffle(finalSelectionPool)[0]);
+      }
+      return shuffle(options);
+    }
       
       let options = [target];
 
