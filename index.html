@@ -289,7 +289,7 @@
     }
 
     function buildOptions(target, count) {
-      const safeEcosystem = vocabularyData.filter(i => i.batch <= Math.max(target.batch, state.currentBatch));
+      const safeEcosystem = vocabularyData.filter(i => i.batch === state.currentBatch);
       const sameGenderPool = safeEcosystem.filter(i => i.gender === target.gender && i.id !== target.id);
       const diffGenderPool = safeEcosystem.filter(i => i.gender !== target.gender);
       
